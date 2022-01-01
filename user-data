@@ -35,7 +35,6 @@ runcmd:
   - sed -i -e '/^\(#\|\)AllowTcpForwarding/s/^.*$/AllowTcpForwarding no/' /etc/ssh/sshd_config
   - sed -i -e '/^\(#\|\)AllowAgentForwarding/s/^.*$/AllowAgentForwarding no/' /etc/ssh/sshd_config
   - sed -i -e 's/$/ cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory/' /boot/firmware/cmdline.txt
-  - curl -sfL https://get.k3s.io | sh -
   - ufw default deny incoming
   - ufw default allow outgoing
   - ufw allow in 22
