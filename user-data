@@ -3,31 +3,25 @@
 # This is the user-data configuration file for cloud-init.
 # https://cloudinit.readthedocs.io/
 
-## Set hostname and timezone
-hostname: <HOSTNAME> # pi-k8s
-timezone: <TIMEZONE> # CET
+hostname: dagobah
+timezone: CET
 
-## Enable password authentication with the SSH daemon
 ssh_pwauth: true
 
-## Add users and groups to the system, and import keys with 
-## the ssh-import-id utility
 users:
-- name: <USERNAME> # piuser
+- name: yoda
   primary-group: users
   shell: /bin/bash
   sudo: ALL=(ALL) NOPASSWD:ALL
-  passwd: <PASSWORD> # SHA-512
   groups: ubuntu,adm,dialout,cdrom,floppy,sudo,audio,dip,video,plugdev,netdev,lxd
   lock_passwd: true
+  passwd: <PASSWORD> # SHA-512 password
   ssh-authorized-keys:
-    - <SSH-PUBKEY> # ssh-ed25519 ABC piuser@pi-k8s
+    - <SSH-PUBKEY> # SSH public key
 
-## Update apt database and upgrade packages on first boot
-package_update: true
-package_upgrade: true
+package_update: false
+package_upgrade: false
 
-# Configure ssh, cgroup, firewall and install k3s
 runcmd:
   - sed -i -e '/^\(#\|\)PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
   - sed -i -e '/^\(#\|\)PasswordAuthentication/s/^.*$/PasswordAuthentication no/' /etc/ssh/sshd_config
@@ -38,7 +32,6 @@ runcmd:
   - ufw default deny incoming
   - ufw default allow outgoing
   - ufw allow in 22
-  - ufw allow in 80
   - ufw allow in 443
   - ufw enable
   - reboot
